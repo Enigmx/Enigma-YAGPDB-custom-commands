@@ -1,0 +1,39 @@
+{{/* swift mute coded con mucho amor by its.enigma. Command trigger should be "starts with" "-sm". change the values as you so please, "limit" is max number of messages a moderator is allowed to delete (e.g {{$limit := 50}} is max 50 optional messages to delete), "Duration" is the duration of the mute (e.g. {{$duration := 60}} is 1 minute of mute), "staffchannel" is the ID of the channel where the target's user ID will be sent along with an embed logging the usage of the command (e.g. {{$staffchannel := 123456789}} ), and "mutedrole" is the ID of the muted role (e.g {{$mutedrole := 987654321}} ). It is important to enable the cleaning function and the give role command in YAGs moderation section inside control panel, as well as giving the bot the necessary perms. */}}
+
+{{/* start configurable variables */}}
+
+{{$limit := }}
+{{$duration := }}
+{{$staffchannel := }}
+{{$mutedrole := }}
+
+{{/* end configurable variables */}}
+
+{{$args := parseArgs 0 "Error. First argument must be Mention/UserID and an optional count of messages to delete." 
+(carg "user" "target user" ) (carg "int" "number")}}
+{{$member := $args.Get 0}}
+{{$count := $args.Get 1}}
+{{$staff := .User.Username}}
+{{if $args.IsSet 0}}
+{{deleteTrigger 0}}
+{{$no_log := exec "giverole" $member $mutedrole}}
+{{$embed := cembed "description" (print "**" $staff "** has used the Swift mute towards **" $member "**.")}}
+{{sendMessage $staffchannel ($args.Get 0).ID}}
+{{sendMessage $staffchannel $embed}}
+{{takeRoleID $member $mutedrole $duration}}
+{{else}}
+Command usage:
+-sm [Target: Mention/UserID] [Optional number of messages to delete]
+{{end}}
+{{if $args.IsSet 1}}
+{{if gt $count $limit}}
+{{$error3 := (print "You have ordered to delete a greater number of messages than **" $limit "**. Since this is the established limit, no more messages than that have been deleted.") }}
+{{exec "clear" $member $limit}}
+{{sendMessage $staffchannel $error3}}
+{{else}}
+{{exec "clear" $member $count}}
+{{end}}
+{{else}}
+{{end}}
+
+{{/* made in chile */}
