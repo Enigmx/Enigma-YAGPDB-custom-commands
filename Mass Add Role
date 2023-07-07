@@ -1,0 +1,143 @@
+{{/* massrole created by its.enigma , this command can add a role to up to 15 targets at the same time. Upon implementation, it is necessary to add roles to the whitelist, to avoid users from giving sensitive roles. The whitelisted roles can be specified in the configurable variables, must be role ID, each ID separated by 1 space, and not touching the "cslice" text ( Example: {{$whitelist := cslice 1234567890 0987654321}} ). If this command is not giving any roles, make sure the bot role is above the role it's trying to give. Preferred command trigger : -massrole. */}}
+
+{{/* start configurable variables */}}
+
+{{$whitelist := cslice }}
+
+{{/* end configurable variables */}}
+
+{{$args := parseArgs 0 "Error. Make sure the role ID/Mention is valid, along with all targets." (carg "role" "roleID") (carg "user" "target1") (carg "user" "target2") (carg "user" "target3") (carg "user" "target4") (carg "user" "target5") (carg "user" "target6") (carg "user" "target7") (carg "user" "target8") (carg "user" "target9") (carg "user" "target10") (carg "user" "target11") (carg "user" "target12") (carg "user" "target13") (carg "user" "target14") (carg "user" "target15")}}
+{{if $args.IsSet 0}}
+{{if not (in $whitelist ($args.Get 0).ID)}}
+The role you are trying to give is not in the whitelist!
+{{else}}
+{{$a := ($args.Get 0).Mention}}
+{{$role := ($args.Get 0).ID}}
+{{if $args.IsSet 1}}
+{{$b := $args.Get 1}}
+{{giveRoleID $b $role}}
+{{$log := cembed "description" (print "Gave " $a " to the following user:\n**" $b "**")}}
+{{$id := sendMessageRetID nil $log}}
+{{if $args.IsSet 2}}
+{{$c := $args.Get 2}}
+{{giveRoleID $c $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (2):\n**" $b "**\n**" $c "**"))}}
+{{if $args.IsSet 3}}
+{{$d := $args.Get 3}}
+{{giveRoleID $d $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (3):\n**" $b "**\n**" $c "**\n**" $d "**"))}}
+{{if $args.IsSet 4}}
+{{$e := $args.Get 4}}
+{{giveRoleID $e $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (4):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**"))}}
+{{/* massrole created by its.enigma , this command can add a role to up to 15 targets at the same time. Upon implementation, it is necessary to add roles to the whitelist, to avoid users from giving sensitive roles. The whitelisted roles can be specified in the configurable variables, must be role ID, each ID separated by 1 space, and not touching the "cslice" text ( Example: {{$whitelist := cslice 1234567890 0987654321}} ). If this command is not giving any roles, make sure the bot role is above the role it's trying to give. Preferred command trigger : -massrole. */}}
+
+{{/* start configurable variables */}}
+
+{{$whitelist := cslice }}
+
+{{/* end configurable variables */}}
+
+{{$args := parseArgs 0 "Error. Make sure the role ID/Mention is valid, along with all targets." (carg "role" "roleID") (carg "user" "target1") (carg "user" "target2") (carg "user" "target3") (carg "user" "target4") (carg "user" "target5") (carg "user" "target6") (carg "user" "target7") (carg "user" "target8") (carg "user" "target9") (carg "user" "target10") (carg "user" "target11") (carg "user" "target12") (carg "user" "target13") (carg "user" "target14") (carg "user" "target15")}}
+{{if $args.IsSet 0}}
+{{if not (in $whitelist ($args.Get 0).ID)}}
+The role you are trying to give is not in the whitelist!
+{{else}}
+{{$a := ($args.Get 0).Mention}}
+{{$role := ($args.Get 0).ID}}
+{{if $args.IsSet 1}}
+{{$b := $args.Get 1}}
+{{giveRoleID $b $role}}
+{{$log := cembed "description" (print "Gave " $a " to the following user:\n**" $b "**")}}
+{{$id := sendMessageRetID nil $log}}
+{{if $args.IsSet 2}}
+{{$c := $args.Get 2}}
+{{giveRoleID $c $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (2):\n**" $b "**\n**" $c "**"))}}
+{{if $args.IsSet 3}}
+{{$d := $args.Get 3}}
+{{giveRoleID $d $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (3):\n**" $b "**\n**" $c "**\n**" $d "**"))}}
+{{if $args.IsSet 4}}
+{{$e := $args.Get 4}}
+{{giveRoleID $e $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (4):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**"))}}
+{{if $args.IsSet 5}}
+{{$f := $args.Get 5}}
+{{giveRoleID $f $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (5):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**"))}}
+{{if $args.IsSet 6}}
+{{$g := $args.Get 6}}
+{{giveRoleID $g $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (6):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**"))}}
+{{if $args.IsSet 7}}
+{{$h := $args.Get 7}}
+{{giveRoleID $h $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (7):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**"))}}
+{{if $args.IsSet 8}}
+{{$i := $args.Get 8}}
+{{giveRoleID $i $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (8):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**\n**" $i "**"))}}
+{{if $args.IsSet 9}}
+{{$j := $args.Get 9}}
+{{giveRoleID $j $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (9):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**\n**" $i "**\n**" $j "**"))}}
+{{if $args.IsSet 10}}
+{{$k := $args.Get 10}}
+{{giveRoleID $k $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (10):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**\n**" $i "**\n**" $j "**\n**" $k "**"))}}
+{{if $args.IsSet 11}}
+{{$l := $args.Get 11}}
+{{giveRoleID $l $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (11):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**\n**" $i "**\n**" $j "**\n**" $k "**\n**" $l "**"))}}
+{{if $args.IsSet 12}}
+{{$m := $args.Get 12}}
+{{giveRoleID $m $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (12):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**\n**" $i "**\n**" $j "**\n**" $k "**\n**" $l "**\n**" $m "**"))}}
+{{if $args.IsSet 13}}
+{{$n := $args.Get 13}}
+{{giveRoleID $n $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (13):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**\n**" $i "**\n**" $j "**\n**" $k "**\n**" $l "**\n**" $m "**\n**" $n "**"))}}
+{{if $args.IsSet 14}}
+{{$o := $args.Get 14}}
+{{giveRoleID $o $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (14):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**\n**" $i "**\n**" $j "**\n**" $k "**\n**" $l "**\n**" $m "**\n**" $n "**\n**" $o "**"))}}
+{{if $args.IsSet 15}}
+{{$p := $args.Get 15}}
+{{giveRoleID $p $role}}
+{{editMessage nil $id (cembed "description" (print "Gave " $a " to the following users (15):\n**" $b "**\n**" $c "**\n**" $d "**\n**" $e "**\n**" $f "**\n**" $g "**\n**" $h "**\n**" $i "**\n**" $j "**\n**" $k "**\n**" $l "**\n**" $m "**\n**" $n "**\n**" $o "**\n**" $p "**"))}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{else}}
+Found role, but no targets. 
+
+Usage:
+**{{.CCTrigger}}** [Role: Mention or ID] [Targets: Mention or ID]
+
+Separate each target with a space, like this:
+**{{.CCTrigger}}** [Role] [Target] [Target] [Target] [Target]
+{{end}}
+{{end}}
+{{else}}
+Give a role to multiple members (Up to 15 at once)
+
+Usage:
+**{{.CCTrigger}}** [Role: Mention or ID] [Targets: Mention or ID]
+
+Separate each target with a space, like this:
+**{{.CCTrigger}}** [Role] [Target] [Target] [Target] [Target]
+{{end}}
+
+{{/* made in chile */}}
