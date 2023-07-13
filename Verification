@@ -1,4 +1,4 @@
-{{/*command coded con mucho amor by its.enigma , Github https://github.com/Enigmx/Enigma-YAGPDB-custom-commands, this command can be used to give and take away a role to a targeted member, to simulate a verification system. Trigger should be "Starts with" -verify. To establish a role to give, edit {{$roletogive := }} and add role ID (for example {{$roletogive := 1234567890}}). Can be left 0 for none. To establish a role to take away, edit {{$roletoremove := }} (for example {{$roletoremove := 9876543210}}). Can also be left 0 for none.*/}}
+{{/*command coded con mucho amor by its.enigma , Github https://github.com/Enigmx/Enigma-YAGPDB-custom-commands, this command can be used to give and take away a role to a targeted member, to simulate a verification system. Preffered trigger: "Starts with:" "-verify". To establish a role to give, edit {{$roletogive := }} and add role ID (for example {{$roletogive := 1234567890}}). Can be left 0 for none. To establish a role to take away, edit {{$roletoremove := }} (for example {{$roletoremove := 9876543210}}). Can also be left 0 for none.*/}}
 
 {{/* configurable variables */}}
 
@@ -15,7 +15,7 @@
 **{{$target}}** has been verified.
 {{else}}
 Usage:
--verify [User ID / Mention]
+{{.CCTrigger}} [User ID / Mention]
 {{end}}
 
 {{/* Made in chile */}}
