@@ -1,0 +1,88 @@
+{{/* command made by its.enigma, Github: https://github.com/Enigmx/Enigma-YAGPDB-custom-commands, command can be used to detect sticker and customise the behaviour of the bot after detecting one. If this commands detects something else that isn't a sticker, open an issue in Github and I may take a look. Trigger should be "RegEx" "\A". Since this is an \A trigger, you should be aware that it may interfer with other custom commands, as the bot only allows a certain number of custom commands to be executed through a single message, and this command will be one slot of that. If you already have other \A trigger commands, you may be able to copy the parts of the code you need for then pasting in the other \A command. Configure the variables upon setting up this command, here is an explanation in each of them:
+
+{{$deleteToggle := 1}} : Toggles on or off the functionality of removing the sticker upon detected. 0 to disable, 1 to enable.
+
+{{$usageLimitToggle := 1}} : Toggles on or off the function of limiting how many stickers can someone send in a period of time before being muted. 0 to disable, 1 to enable.
+
+{{$usageLimit := 3}} : the number of stickers a member is allowed to send in a period of time before being muted. in this case, if the member send a sticker for the fourth time, they will be muted. This only works if $usageLimitToggle is set to 1.
+
+{{$usageFrecuency := 30}} : the period of time a member is subject to mute (in seconds). In this case it is set to 30 seconds, meaning that if the member sends four stickers (set in $usageLimit) in 30 seconds, they will be muted. This only works if $usageLimitToggle is set to 1.
+
+{{$mutedRoleID := 1234567890}} : the ID of the muted role if the member triggers the limit. It is recommended to not use the same Mute role your moderation bots would use for manual mutes. This only works if $usageLimitToggle is set to 1.
+
+{{$muteDuration := 600}} : how long does the mute lasts in seconds. This only works if $usageLimitToggle is set to 1.
+
+{{$chatMessageToggle := 1}} : toggles on or off the message the bot sends in chat when it detects a sticker. 0 to disable, 1 to enable.
+
+{{$chatMessageContent := "Stickers are not allowed!"}} : the message the bot sends when it detects a sticker. This only works if $chatMessageToggle is set to 1.
+
+{{$deleteChatMessageToggle := 0}} : toggles on or off the auto removal of the message the bot sent if $chatMessageToggle is on. 0 to disable, 1 to enable.
+
+{{$deleteChatMessageTime := 5}} : the time in seconds the bot takes to delete it's message. This only works if $deleteChatMessageToggle is set to 1.
+
+{{$dmMessageToggle := 0}} : toggles on or off the message the bot sends in DM to the member who sent the sticker. Good alternative to the chat message. 0 to disable, 1 to enable.
+
+{{$dmMessageContent := "Stickers aren't allowed here!"}} : the message shown in DMs to the member who sent the sticker, inside an embed. This only works if $dmMessageToggle is set to 1.
+
+{{$logUsageToggle := 1}} : sends a message log registering the usage of sticker in a log channel. Recommended if $deleteToggle is enabled, as most bots don't log the deletion of stickers. Does not actually show what sticker was sent. 0 to disable, 1 to enable.
+
+{{$logMuteToggle := 1}} : sends a message log registering if a member has been muted for overusing stickers. Uses the same channel as $logUsageToggle. 0 to disable, 1 to enable. 
+
+{{$logChannelID := 0987654321}} : the ID of the channel where $logUsageToggle and/or $logMuteToggle send information, in case of being toggles on. */}}
+
+{{/* configurable variables */}}
+
+{{$deleteToggle := 0}}
+{{$usageLimitToggle := 0}}
+{{$usageLimit := 0}}
+{{$usageFrecuency := 0}}
+{{$mutedRoleID := 0}}
+{{$muteDuration := 0}}
+{{$chatMessageToggle := 0}}
+{{$chatMessageContent := "Stickers are not allowed!"}}
+{{$deleteChatMessageToggle := 0}}
+{{$deleteChatMessageTime := 0}}
+{{$dmMessageToggle := 0}}
+{{$dmMessageContent := "Your message has been removed, as stickers aren't allowed here."}}
+{{$logUsageToggle := 0}}
+{{$logMuteToggle := 0}}
+{{$logChannelID :=0}}
+
+{{/* end configurable variables */}}
+
+{{if not (eq .Message.Type 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32)}}
+{{if not (or .Message.Content .Message.Attachments .Message.WebhookID)}}
+{{if eq 1 $deleteToggle}}
+{{deleteTrigger 0}}
+{{end}}
+{{if eq 1 $usageLimitToggle}}
+{{$currentCount := toInt (dbGet .User.ID "its.enigmaCCStickerDetect").Value}}
+{{if ge $currentCount $usageLimit}}
+{{dbDel .User.ID "its.enigmaCCStickerDetect"}}
+{{addRoleID $mutedRoleID}}
+{{removeRoleID $mutedRoleID $muteDuration}}
+{{if eq 1 $logMuteToggle}}
+{{$embed := cembed "author" (sdict "name" (print .User.Username) "icon_url" (.User.AvatarURL "265")) "title" (print "Sticker Automute") "description" (print "This member has repeatedly used stickers and went over the limit of **" $usageLimit "** in <#" .Message.ChannelID ">.") "color" 0xC90000}}
+{{sendMessage $logChannelID (complexMessage "content" (print .User.ID) "embed" $embed)}}
+{{end}}
+{{else}}
+{{$noLog := dbIncr .User.ID "its.enigmaCCStickerDetect" 1}}
+{{dbSetExpire .User.ID "its.enigmaCCStickerDetect" $noLog $usageFrecuency}}
+{{end}}
+{{end}}
+{{if eq 1 $chatMessageToggle}}
+{{print ( $chatMessageContent )}}
+{{if eq 1 $deleteChatMessageToggle}}
+{{deleteResponse $deleteChatMessageTime}}
+{{end}}
+{{end}}
+{{if eq 1 $dmMessageToggle}}
+{{sendDM (cembed "title" (print .Guild.Name) "description" (print $dmMessageContent) "color" 0xC99999)}}
+{{end}}
+{{if eq 1 $logUsageToggle}}
+{{sendMessage $logChannelID (cembed "author" (sdict "name" (print .User.Username) "icon_url" (.User.AvatarURL "265")) "title" (print "Sticker log") "description" (print "This member has used a sticker in <#" .Message.ChannelID ">.") "color" 0xC99999)}}
+{{end}}
+{{end}}
+{{end}}
+
+{{/* made in chile */}}
