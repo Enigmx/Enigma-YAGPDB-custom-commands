@@ -1,4 +1,4 @@
-{{/* swift mute coded con mucho amor by its.enigma. Command trigger should be "starts with" "-sm". change the values as you so please, "limit" is max number of messages a moderator is allowed to delete (e.g {{$limit := 50}} is max 50 optional messages to delete), "Duration" is the duration of the mute (e.g. {{$duration := 60}} is 1 minute of mute), "staffchannel" is the ID of the channel where the target's user ID will be sent along with an embed logging the usage of the command (e.g. {{$staffchannel := 123456789}} ), and "mutedrole" is the ID of the muted role (e.g {{$mutedrole := 987654321}} ). It is important to enable the cleaning function and the give role command in YAGs moderation section inside control panel, as well as giving the bot the necessary perms. */}}
+{{/* swift mute coded con mucho amor by its.enigma, Github https://github.com/Enigmx/Enigma-YAGPDB-custom-commands. Preffered trigger: "Starts with:" "-sm". change the values as you so please, "limit" is max number of messages a moderator is allowed to delete (e.g {{$limit := 50}} is max 50 optional messages to delete), "Duration" is the duration of the mute (e.g. {{$duration := 60}} is 1 minute of mute), "staffchannel" is the ID of the channel where the target's user ID will be sent along with an embed logging the usage of the command (e.g. {{$staffchannel := 123456789}} ), and "mutedrole" is the ID of the muted role (e.g {{$mutedrole := 987654321}} ). It is important to enable the cleaning function and the give role command in YAGs moderation section inside control panel, as well as giving the bot the necessary perms. */}}
 
 {{/* start configurable variables */}}
 
@@ -23,7 +23,7 @@
 {{takeRoleID $member $mutedrole $duration}}
 {{else}}
 Command usage:
--sm [Target: Mention/UserID] [Optional number of messages to delete]
+{{.CCTrigger}} [Target: Mention/UserID] [Optional number of messages to delete]
 {{end}}
 {{if $args.IsSet 1}}
 {{if gt $count $limit}}
