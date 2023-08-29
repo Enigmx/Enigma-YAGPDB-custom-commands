@@ -1,0 +1,14 @@
+{{/* simple activity detect made by its.enigma https://github.com/Enigmx/Enigma-YAGPDB-custom-commands, this will delete activity messages and timeout if many of them are sent in a short time (five minutes), how many of them must be sent depends of what is set in $usageLimit, it is 3 by default. Trigger: "RegEx" "\A". If you already have other \A triggers, it is recommended that you copy and paste the code from this command to the other, should work fine in the start or end. */}}
+
+{{$usageLimit := 3}}
+{{if .Message.Activity}}
+{{deleteTrigger 0}}
+{{$currentCount := toInt (dbGet .User.ID "its.enigmaCCActivityDetect").Value}}
+{{if ge $currentCount $usageLimit}}
+{{dbDel .User.ID "its.enigmaCCActivityDetect"}}
+{{$noLog := exec "timeout" .User.ID "5m" "Sending activity messages repeatedly"}}
+{{else}}
+{{$noLog2 := dbIncr .User.ID "its.enigmaCCActivityDetect" 1}}
+{{dbSetExpire .User.ID "its.enigmaCCActivityDetect" $noLog2 300}}
+{{end}}
+{{end}}
