@@ -1,39 +1,75 @@
-{{/* swift mute coded con mucho amor by its.enigma, Github https://github.com/Enigmx/Enigma-YAGPDB-custom-commands. Preffered trigger: "Starts with:" "-sm". change the values as you so please, "limit" is max number of messages a moderator is allowed to delete (e.g {{$limit := 50}} is max 50 optional messages to delete), "Duration" is the duration of the mute (e.g. {{$duration := 60}} is 1 minute of mute), "staffchannel" is the ID of the channel where the target's user ID will be sent along with an embed logging the usage of the command (e.g. {{$staffchannel := 123456789}} ), and "mutedrole" is the ID of the muted role (e.g {{$mutedrole := 987654321}} ). It is important to enable the cleaning function and the give role command in YAGs moderation section inside control panel, as well as giving the bot the necessary perms. */}}
+{{/* swift mute coded con mucho amor by its.enigma. change the values as you so please, "limit" is max number of messages a moderator is allowed to delete (e.g {{$limit := 50}} is max 50 optional messages to delete), "Duration" is the duration of the mute (e.g. {{$duration := 60}} is 1 minute of mute), "staffchannel" is the ID of the channel where the target's user ID will be sent along with an embed logging the usage of the command (e.g. {{$staffchannel := 123456789}} ), and "mutedrole" is the ID of the muted role (e.g {{$mutedrole := 987654321}} ). It is important to give the bot the necessary perms, and to toggle on the "clear" command in the control panel, under moderation. */}}
+{{/* Trigger type: RegEx | \A((-sm|!sm|\.sm|\+sm)\b|(-qm|!qm|\.qm|\+qm)\b|(-swift|!swift|\.swift|\+swift)\b|(-бт |!бт |\.бт |\+бт )) */}}
+{{$limit := 25}}
+{{$staffchannel := 0}}
+{{$mutedrole := 0}}
+{{$duration := 600}}
 
-{{/* start configurable variables */}}
+{{/* ignore */}}
+{{$a := 0}}
+{{$b := .User.Username}}
+{{$c := .User.AvatarURL "512"}}
+{{$e := 0}}
+{{$aq := ""}}
+{{$qa := ""}}
+{{$de := 0}}
+{{$v := 0}}
+{{if eq (len .CmdArgs) 0}}
+__Command usage:__
+**-sm** [Targets: Mention/UserID] [Optional number of messages to delete]
 
-{{$limit := }}
-{{$duration := }}
-{{$staffchannel := }}
-{{$mutedrole := }}
-
-{{/* end configurable variables */}}
-
-{{$args := parseArgs 0 "Error. First argument must be Mention/UserID and an optional count of messages to delete." 
-(carg "user" "target user" ) (carg "int" "number")}}
-{{$member := $args.Get 0}}
-{{$count := $args.Get 1}}
-{{$staff := .User.Username}}
-{{if $args.IsSet 0}}
-{{deleteTrigger 0}}
-{{$no_log := exec "giverole" $member $mutedrole}}
-{{$embed := cembed "description" (print "**" $staff "** has used the Swift mute towards **" $member "**.")}}
-{{sendMessage $staffchannel ($args.Get 0).ID}}
-{{sendMessage $staffchannel $embed}}
-{{takeRoleID $member $mutedrole $duration}}
+__Valid triggers:__
+-sm | !sm | .sm | +sm
+-qm | !qm | .qm | +qm
+-swift | !swift | .swift | +swift
+-бт | !бт | .бт | +бт
 {{else}}
-Command usage:
-{{.CCTrigger}} [Target: Mention/UserID] [Optional number of messages to delete]
+{{deleteTrigger 0.5}}
+{{range .CmdArgs}}
+{{if le (len .) 3}}
+{{$a = toInt .}}
+{{break}}
+{{else}}
+{{continue}}
 {{end}}
-{{if $args.IsSet 1}}
-{{if gt $count $limit}}
+{{end}}
+{{range .CmdArgs}}
+{{if le (len .) 3}}
+{{continue}}
+{{else if (getMember .)}}
+{{$v = add $v 1}}
+{{$d := (getMember .).User.Username}}
+{{giveRoleID . $mutedrole}}
+{{takeRoleID . $mutedrole $duration}}
+{{$aq = joinStr " " $aq (getMember .).User.ID}}
+{{if eq $de 0}}
+{{$de = add $de 1}}
+{{$qa = (print "**" $d)}}
+{{else}}
+{{$qa = joinStr "**, **" $qa $d}}
+{{end}}
+{{sendMessage $staffchannel (complexMessage "content" (print (getMember .).User.ID) "embed" (cembed "author" (sdict "name" (print $b) "icon_url" ($c)) "description" (print "**" $b "** has used the Swift mute towards **" $d "**.") "color" 2657023))}}
+{{if gt $a 0}}
+{{if lt $e 5}}
+{{if gt $a $limit}}
+{{exec "clear" . $limit}}
+{{$e = add $e 1}}
+{{else}}
+{{exec "clear" . $a}}
+{{$e = add $e 1}}
+{{end}}
+{{else}}
+{{end}}
+{{end}}
+{{end}}
+{{end}}
+{{if gt $a $limit}}
 {{$error3 := (print "You have ordered to delete a greater number of messages than **" $limit "**. Since this is the established limit, no more messages than that have been deleted.") }}
-{{exec "clear" $member $limit}}
 {{sendMessage $staffchannel $error3}}
-{{else}}
-{{exec "clear" $member $count}}
 {{end}}
-{{else}}
+{{end}}
+{{if gt $v 1}}
+{{sendMessage $staffchannel (complexMessage "content" (print $aq) "embed" (cembed "author" (sdict "name" (print $b) "icon_url" ($c)) "description" (print "**" $b "** has used the Swift mute towards " $qa "**.") "color" 0xf542d1))}}
 {{end}}
 
-{{/* made in chile */}
+{{/* made in chile */}}
